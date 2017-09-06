@@ -2,6 +2,35 @@
 Changelog
 =========
 
+* :support:`979` Update how we use `Cryptography <https://cryptography.io>`_'s
+  signature/verification methods so we aren't relying on a deprecated API.
+  Thanks to Paul Kehrer for the patch.
+
+  .. warning::
+    This bumps the minimum Cryptography version from 1.1 to 1.5. Such an
+    upgrade should be backwards compatible and easy to do. See `their changelog
+    <https://cryptography.io/en/latest/changelog/>`_ for additional details.
+* :support:`-` Ed25519 keys never got proper API documentation support; this
+  has been fixed.
+* :feature:`1026` Update `~paramiko.ed25519key.Ed25519Key` so its constructor
+  offers the same ``file_obj`` parameter as its sibling key classes. Credit:
+  Michal Kuffa.
+* :feature:`1013` Added pre-authentication banner support for the server
+  interface (`ServerInterface.get_banner
+  <paramiko.server.ServerInterface.get_banner>` plus related support in
+  ``Transport/AuthHandler``.) Patch courtesy of Dennis Kaarsemaker.
+* :bug:`60 major` (via :issue:`1037`) Paramiko originally defaulted to zlib
+  compression level 9 (when one connects with ``compression=True``; it defaults
+  to off.) This has been found to be quite wasteful and tends to cause much
+  longer transfers in most cases, than is necessary.
+
+  OpenSSH defaults to compression level 6, which is a much more reasonable
+  setting (nearly identical compression characteristics but noticeably,
+  sometimes significantly, faster transmission); Paramiko now uses this value
+  instead.
+
+  Thanks to Damien Dubé for the report and ``@DrNeutron`` for investigating &
+  submitting the patch.
 * :support:`-` Display exception type and message when logging auth-rejection
   messages (ones reading ``Auth rejected: unsupported or mangled public key``);
   previously this error case had a bare except and did not display exactly why
